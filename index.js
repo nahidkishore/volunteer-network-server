@@ -13,8 +13,37 @@
 
     const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true  });
     client.connect(err => {
-      const registerEventsCollection = client.db("volunteerNetwork").collection("events");
-    
+      const registerEventsCollection = client.db(process.env.DB_NAME).collection("events");
+      const AllDataCollection = client.db(process.env.DB_NAME).collection("datas");
+  
+      
+app.get('/datas',(req, res)=>{
+  AllDataCollection.find({})
+  .toArray( (err,documents ) =>{
+    res.send(documents)
+
+  })
+})
+
+app.get('/singleData/:id',(req, res)=>{
+  AllDataCollection.find({id:req.params.id})
+  .toArray( (err,documents ) =>{
+    res.send(documents[0]);
+
+  })
+})
+
+app.post("/addAllData",(req,res) => {
+  const data = req.body;
+  AllDataCollection.insertOne(data)
+  .then(result =>{
+console.log(result);
+res.send(result.insertedCount > 0);
+  })
+})
+
+
+
 app.post('/addRegisteredEvent',(req,res) => {
   const newRegistration =req.body;
   registerEventsCollection.insertOne(newRegistration)
@@ -26,12 +55,15 @@ app.post('/addRegisteredEvent',(req,res) => {
 })
 
 app.get('/events',(req, res)=>{
-  //console.log(req.body.email);
+  //console.log(req.query.email);
   registerEventsCollection.find({email:req.query.email})
   .toArray((err,documents)=>{
     res.send(documents)
   })
 })
+
+
+
    //delete
  app.delete('/delete/:id',(req, res)=>{
   /*  console.log(req.params.id); */
