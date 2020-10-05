@@ -16,7 +16,16 @@
       const registerEventsCollection = client.db(process.env.DB_NAME).collection("events");
       const AllDataCollection = client.db(process.env.DB_NAME).collection("datas");
   
+ 
       
+   app.get('/allRegisteredEvents',(req,res)=>{
+    registerEventsCollection.find({})
+        .toArray((error,documents)=>{
+          res.send(documents)
+          
+        })
+      })
+
 app.get('/datas',(req, res)=>{
   AllDataCollection.find({})
   .toArray( (err,documents ) =>{
@@ -32,6 +41,10 @@ app.get('/singleData/:id',(req, res)=>{
 
   })
 })
+
+
+
+
 
 app.post("/addAllData",(req,res) => {
   const data = req.body;
@@ -63,16 +76,14 @@ app.get('/events',(req, res)=>{
 })
 
 
+app.delete('/deleteEvent',(req,res)=>{
+ registerEventsCollection.deleteOne({_id:ObjectID(req.headers.id)})
+  .then(result=>{
+    
+    res.send(result.deletedCount>0)
+  })
+})
 
-   //delete
- app.delete('/delete/:id',(req, res)=>{
-  /*  console.log(req.params.id); */
- registerEventsCollection.deleteOne({_id: ObjectId (req.params.id)})
- .then((result)=>{
-    console.log(result);
- res.send('everything is fine')
- })
- })
     });
 
 
@@ -81,4 +92,4 @@ app.get('/events',(req, res)=>{
     })
 
 
-    app.listen(port)
+    app.listen(process.env.PORT || port);
