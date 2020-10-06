@@ -15,8 +15,8 @@
     client.connect(err => {
       const registerEventsCollection = client.db(process.env.DB_NAME).collection("events");
       const AllDataCollection = client.db(process.env.DB_NAME).collection("datas");
-  
- 
+
+ //register list
       
    app.get('/allRegisteredEvents',(req,res)=>{
     registerEventsCollection.find({})
@@ -26,6 +26,7 @@
         })
       })
 
+      //
 app.get('/datas',(req, res)=>{
   AllDataCollection.find({})
   .toArray( (err,documents ) =>{
