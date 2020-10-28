@@ -66,14 +66,24 @@ client.connect((err) => {
   });
 
  //delete 
- app.delete('/delete/:id', (req, res) => {
-  console.log(req.params.id)
-  registerEventsCollection.deleteOne({ _id: ObjectId(req.params.id) })
-    .then(result => {
-      res.send(result.deletedCount > 0)
-    })
+ app.delete('/cancel-event',(req,res)=>{
+  registerEventsCollection.deleteOne({_id:ObjectID(req.headers.id)})
+  .then(result=>{
+    
+    res.send(result.deletedCount>0)
+  })
 })
 
+
+//
+app.get("/my-events", (req, res) => {
+  //console.log(req.query.email);
+  registerEventsCollection
+    .find({ email: req.headers.email })
+    .toArray((err, documents) => {
+      res.send(documents);
+    });
+});
   
 });
 
