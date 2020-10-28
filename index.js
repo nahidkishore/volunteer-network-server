@@ -16,9 +16,7 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 client.connect((err) => {
-  const registerEventsCollection = client
-    .db(process.env.DB_NAME)
-    .collection("events");
+  const registerEventsCollection = client.db(process.env.DB_NAME).collection("events");
   const AllDataCollection = client.db(process.env.DB_NAME).collection("datas");
 
   //register list
@@ -67,13 +65,16 @@ client.connect((err) => {
       });
   });
 
-  app.delete("/deleteEvent", (req, res) => {
-    registerEventsCollection
-      .deleteOne({ _id: ObjectID(req.headers.id) })
-      .then((result) => {
-        res.send(result.deletedCount > 0);
-      });
-  });
+ //delete 
+ app.delete('/delete/:id', (req, res) => {
+  console.log(req.params.id)
+  registerEventsCollection.deleteOne({ _id: ObjectId(req.params.id) })
+    .then(result => {
+      res.send(result.deletedCount > 0)
+    })
+})
+
+  
 });
 
 app.get("/", function (req, res) {
