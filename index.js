@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const MongoClient = require("mongodb").MongoClient;
+const ObjectId= require('mongodb').ObjectID;
 require("dotenv").config();
 const port = 7000;
 const bodyParser = require("body-parser");
@@ -66,11 +67,17 @@ client.connect((err) => {
   });
 
  //delete 
- app.delete('/cancelEvent/:id', (req, res) => {
-  const id = req.params.id
-  registerEventsCollection.deleteOne({ _id: ObjectId(id) })
-    .then(result => res.send(result.deletedCount > 0))
+   app.delete('/cancelEvent/:id', (req, res) => {
+  const id = req.params.id;
+  registerEventsCollection.deleteOne({_id:ObjectId (id)})
+    .then(result => {
+      res.send(result.deletedCount > 0)
+    })
+    
 })
+
+
+
 
 
 //
