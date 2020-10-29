@@ -16,3 +16,7 @@ A full-stack single page web page with dashboard and multiple options of the vol
 * React-Bootstrap 
 * MongoDB
 * Firebase Authentication	
+
+## Screenshots
+
+![screencapture-localhost-3000-2020-10-29-21_13_32](https://user-images.githubusercontent.com/39863835/97593407-e0101b80-1a2b-11eb-80e7-1982b8fdf0b4.png)
