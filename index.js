@@ -108,6 +108,18 @@ client.connect((err) => {
       res.send(admins.length > 0);
     });
   });
+
+//search events
+app.get('/events',(req, res) => {
+  const searchValue=req.query.filter
+  opportunitiesCollection.find({name: {$regex: searchValue}})
+  .toArray((err, result) =>{
+    res.send(result)
+  })
+})
+
+
+
 });
 
 app.get("/", function (req, res) {
