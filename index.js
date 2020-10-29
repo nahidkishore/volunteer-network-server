@@ -66,7 +66,19 @@ client.connect((err) => {
       });
   });
 
- //delete 
+
+//admin delete 
+
+app.delete('/delete/:id', (req, res) => {
+  const id = req.params.id;
+  AllDataCollection.deleteOne({_id:ObjectId (id)})
+    .then(result => {
+      res.send(result.deletedCount > 0)
+    })
+    
+})
+
+ //cancel 
    app.delete('/cancelEvent/:id', (req, res) => {
   const id = req.params.id;
   registerEventsCollection.deleteOne({_id:ObjectId (id)})
@@ -78,9 +90,6 @@ client.connect((err) => {
 
 
 
-
-
-//
 
   
 });
