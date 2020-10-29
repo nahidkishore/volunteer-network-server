@@ -68,7 +68,7 @@ client.connect((err) => {
  //delete 
  app.delete('/cancelEvent/:id', (req, res) => {
   const id = req.params.id
-  registerEventsCollection.deleteOne({ _id: ObjectID(id) })
+  registerEventsCollection.deleteOne({ _id: ObjectId(id) })
     .then(result => res.send(result.deletedCount > 0))
 })
 
