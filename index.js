@@ -66,12 +66,10 @@ client.connect((err) => {
   });
 
  //delete 
- app.delete('/delete/:id', (req, res) => {
-  console.log(req.params.id)
-  registerEventsCollection.deleteOne({ _id: ObjectId(req.params.id) })
-    .then(result => {
-      res.send(result.deletedCount > 0)
-    })
+ app.delete('/cancelEvent/:id', (req, res) => {
+  const id = req.params.id
+  registerEventsCollection.deleteOne({ _id: ObjectID(id) })
+    .then(result => res.send(result.deletedCount > 0))
 })
 
 
