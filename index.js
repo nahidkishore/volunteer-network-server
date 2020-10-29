@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const MongoClient = require("mongodb").MongoClient;
-const ObjectId= require('mongodb').ObjectID;
+const ObjectId = require("mongodb").ObjectID;
 require("dotenv").config();
 const port = 7000;
 const bodyParser = require("body-parser");
@@ -17,9 +17,13 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 client.connect((err) => {
-  const registerEventsCollection = client.db(process.env.DB_NAME).collection("events");
+  const registerEventsCollection = client
+    .db(process.env.DB_NAME)
+    .collection("events");
   const AllDataCollection = client.db(process.env.DB_NAME).collection("datas");
-  const AddAdminCollection=client.db(process.env.DB_NAME).collection("admins");
+  const AddAdminCollection = client
+    .db(process.env.DB_NAME)
+    .collection("admins");
 
   //register list
 
@@ -67,54 +71,43 @@ client.connect((err) => {
       });
   });
 
+  //admin delete
 
-//admin delete 
+  app.delete("/delete/:id", (req, res) => {
+    const id = req.params.id;
+    AllDataCollection.deleteOne({ _id: ObjectId(id) }).then((result) => {
+      res.send(result.deletedCount > 0);
+    });
+  });
 
-app.delete('/delete/:id', (req, res) => {
-  const id = req.params.id;
-  AllDataCollection.deleteOne({_id:ObjectId (id)})
-    .then(result => {
-      res.send(result.deletedCount > 0)
-    })
-    
-})
+  //cancel
+  app.delete("/cancelEvent/:id", (req, res) => {
+    const id = req.params.id;
+    registerEventsCollection.deleteOne({ _id: ObjectId(id) }).then((result) => {
+      res.send(result.deletedCount > 0);
+    });
+  });
 
- //cancel 
-   app.delete('/cancelEvent/:id', (req, res) => {
-  const id = req.params.id;
-  registerEventsCollection.deleteOne({_id:ObjectId (id)})
-    .then(result => {
-      res.send(result.deletedCount > 0)
-    })
-    
-})
-
-
-//add admins
-app.post('/addAdmin', (req, res) => {
-  const admin = req.body;
-  AddAdminCollection.insertOne(admin)
-      .then(result => {
-          if (result.insertedCount > 0) {
-              res.sendStatus(200);
-          }
+  //add admins
+  app.post("/addAdmin", (req, res) => {
+    const admin = req.body;
+    AddAdminCollection.insertOne(admin)
+      .then((result) => {
+        if (result.insertedCount > 0) {
+          res.sendStatus(200);
+        }
       })
-      .catch(err => console.log(err))
-});
+      .catch((err) => console.log(err));
+  });
 
+  //IS admin
 
-//IS admin 
-
-app.post('/isAdmin', (req, res) => {
-  const email = req.body.email;
-  AddAdminCollection.find({ email: email })
-    .toArray((error, admins) => {
-      res.send(admins.length > 0)
-    })
-});
-
-
-  
+  app.post("/isAdmin", (req, res) => {
+    const email = req.body.email;
+    AddAdminCollection.find({ email: email }).toArray((error, admins) => {
+      res.send(admins.length > 0);
+    });
+  });
 });
 
 app.get("/", function (req, res) {
