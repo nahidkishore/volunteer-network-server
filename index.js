@@ -19,6 +19,7 @@ const client = new MongoClient(uri, {
 client.connect((err) => {
   const registerEventsCollection = client.db(process.env.DB_NAME).collection("events");
   const AllDataCollection = client.db(process.env.DB_NAME).collection("datas");
+  const AddAdminCollection=client.db(process.env.DB_NAME).collection("admins");
 
   //register list
 
@@ -89,6 +90,28 @@ app.delete('/delete/:id', (req, res) => {
 })
 
 
+//add admins
+app.post('/addAdmin', (req, res) => {
+  const admin = req.body;
+  AddAdminCollection.insertOne(admin)
+      .then(result => {
+          if (result.insertedCount > 0) {
+              res.sendStatus(200);
+          }
+      })
+      .catch(err => console.log(err))
+});
+
+
+//IS admin 
+
+app.post('/isAdmin', (req, res) => {
+  const email = req.body.email;
+  AddAdminCollection.find({ email: email })
+    .toArray((error, admins) => {
+      res.send(admins.length > 0)
+    })
+});
 
 
   
